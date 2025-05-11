@@ -2,16 +2,14 @@ package main
 
 import (
 	"bee"
-	"log"
 	"net/http"
 )
 
 func main() {
 	engine := bee.NEW()
-	engine.GET("/", func(w http.ResponseWriter, r *http.Request) {
-		log.Println("GET /")
-		w.Write([]byte("Hello, BEE!"))
+	engine.GET("/", func(c *bee.Context) {
+		c.JSON(http.StatusOK, map[string]string{"message": "Hello, World!"})
 	})
-	engine.Run(":8080")
 
+	engine.Run(":8080")
 }
