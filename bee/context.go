@@ -14,6 +14,12 @@ type Context struct {
 	Path      string
 	Method    string
 	StateCode int
+	Params    map[string]string
+}
+
+func (c *Context) Param(key string) string {
+	value, _ := c.Params[key]
+	return value
 }
 
 func newContext(w http.ResponseWriter, r *http.Request) *Context {
