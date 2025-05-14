@@ -15,11 +15,22 @@ type Context struct {
 	Method    string
 	StateCode int
 	Params    map[string]string
+	// middleware
+	handlers []HandlerFunc
+	index    int
 }
 
 func (c *Context) Param(key string) string {
 	value, _ := c.Params[key]
 	return value
+}
+
+func (c *Context) Next() {
+	c.index++
+	s := len(c.handlers)
+	for ; c.index < s; c.index++ {
+		c.handlers[c.index](c)
+	}
 }
 
 func newContext(w http.ResponseWriter, r *http.Request) *Context {
@@ -29,6 +40,7 @@ func newContext(w http.ResponseWriter, r *http.Request) *Context {
 		Path:      r.URL.Path,
 		Method:    r.Method,
 		StateCode: http.StatusOK,
+		index:     -1,
 	}
 }
 
