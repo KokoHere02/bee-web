@@ -34,6 +34,11 @@ func (c *Context) Next() {
 	}
 }
 
+func (c *Context) Fail(code int, message string) {
+	c.index = len(c.handlers) // skip all the handlers
+	c.JSON(code, map[string]string{"message": message})
+}
+
 func (c *Context) HTML(code int, name string, data interface{}) {
 	c.SetHeader("Content-Type", "text/html")
 	c.Status(code)
