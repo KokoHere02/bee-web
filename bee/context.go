@@ -18,10 +18,11 @@ type Context struct {
 	// middleware
 	handlers []HandlerFunc
 	index    int
+	engine   *Engine
 }
 
 func (c *Context) Param(key string) string {
-	value, _ := c.Params[key]
+	value := c.Params[key]
 	return value
 }
 
@@ -30,6 +31,14 @@ func (c *Context) Next() {
 	s := len(c.handlers)
 	for ; c.index < s; c.index++ {
 		c.handlers[c.index](c)
+	}
+}
+
+func (c *Context) HTML(code int, name string, data interface{}) {
+	c.SetHeader("Content-Type", "text/html")
+	c.Status(code)
+	if err := c.engine.htmlTemplates.ExecuteTemplate(c.Writer, name, data); err != nil {
+		http.Error(c.Writer, err.Error(), http.StatusInternalServerError)
 	}
 }
 

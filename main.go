@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	engine := bee.NEW()
+	engine := bee.New()
 	engine.GET("/", func(c *bee.Context) {
 		c.JSON(http.StatusOK, map[string]string{"message": "Hello, World!"})
 	})
