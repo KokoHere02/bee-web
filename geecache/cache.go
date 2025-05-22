@@ -1,10 +1,13 @@
-package lru
+package geecache
 
-import "sync"
+import (
+	"bee-web/geecache/lru"
+	"sync"
+)
 
 type cache struct {
 	mu        sync.Mutex
-	lru       *Cache
+	lru       *lru.Cache
 	cacheByte int64
 }
 
@@ -12,7 +15,7 @@ func (c *cache) add(key string, value ByteView) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	if c.lru == nil {
-		c.lru = New(c.cacheByte, nil)
+		c.lru = lru.New(c.cacheByte, nil)
 	}
 	c.lru.Add(key, value)
 }
